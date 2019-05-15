@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  <configuration>
+  	<typeAliases>
+		<typeAlias type="com.hojin.mywep.dto.MemberDto" alias="member"/>
+		<typeAlias type="com.hojin.mywep.dto.Criteria" alias="criteria"/>
+		<typeAlias type="com.hojin.mywep.dto.BoardVO" alias="boardvo"/>
+		<typeAlias type="com.hojin.mywep.dto.PageDTO" alias="pagedto"/>
+		<typeAlias type="com.hojin.mywep.dto.NoUserDto" alias="nouser"/>
+  	</typeAliases>
+  	
+  </configuration>

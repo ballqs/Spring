@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hojin.mywep.dao.MywepDao">
+	<select id="login" resultType="member" parameterType="String">
+		SELECT * FROM MEMBER_TB WHERE ID = #{id}
+	</select>
+	
+	<insert id="signup" parameterType="member">
+		INSERT INTO MEMBER_TB(ID,PW,NAME,EMAIL,TEL)
+		VALUES(#{ID},#{PW},#{NAME},#{EMAIL},#{TEL})
+	</insert>
+	
+	
+	<select id="getListWithPaging" resultType="boardvo">
+  <![CDATA[
+  select 
+    post_no, post_title, post_content, id, regdate, updatedate
+  from 
+      (select /*+INDEX_DESC(tbl_board pk_board) */ 
+        rownum rn, tb.post_no, tb.post_title, tb.post_content,
+        COALESCE(mt.id,tb.id) as id, tb.regdate, tb.updatedate 
+      from 
+        tbl_board tb , member_tb mt 
+        where tb.id = mt.id(+) and
+  ]]>
+  	<!-- INDEX_DESC(tbl_board pk_board) : 최신글부터 올라오게 해주는 것 -->
+  	<!-- trim : 앞뒤로 빈문자가 있을 경우 지워주는 역할 -->
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							post_title like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							post_content like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'W'.toString()">
+							id like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+      
+  <![CDATA[    
+      rownum <= #{pageNum} * #{amount}
+      )
+  where rn > (#{pageNum} -1) * #{amount}   
+  ]]>
+	</select>
+
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_board where
+
+		<include refid="criteria"></include>
+
+		post_no > 0
+		
+	</select>
+	
+	
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item='type' collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							post_title like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							post_content like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'W'.toString()">
+							id like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<insert id="postregistering" parameterType="boardvo">
+		INSERT INTO TBL_BOARD(POST_NO,POST_TITLE,POST_CONTENT,ID,REGDATE)
+		VALUES(SEQ_BOARD.NEXTVAL,#{POST_TITLE},#{POST_CONTENT},#{ID},SYSDATE)
+	</insert>
+	
+	<select id="post_no_selectOne" resultType="Long">
+		SELECT MAX(POST_NO) FROM TBL_BOARD
+	</select>
+	
+	<insert id="nouser_insert" parameterType="nouser">
+		INSERT INTO NOUSER_TB(POST_NO,NONE_PW)
+		VALUES(#{POST_NO},#{NONE_PW})
+	</insert>
+	
+	<select id="post_view" parameterType="Long" resultType="boardvo">
+		SELECT * FROM TBL_BOARD WHERE POST_NO = #{post_no}
+	</select>
+	
+	<select id="post_modify" parameterType="Long" resultType="boardvo">
+		SELECT * FROM TBL_BOARD WHERE POST_NO = #{post_no}
+	</select>
+	
+	<select id="nouserSelectOne" parameterType="Long" resultType="String">
+		SELECT NONE_PW FROM NOUSER_TB WHERE POST_NO = #{post_no}
+	</select>
+	
+</mapper>
