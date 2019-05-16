@@ -70,4 +70,25 @@ public class MywepDaoImpl implements MywepDao{
 		return sqlSession.selectOne(nameSpace+".nouserSelectOne", post_no);
 	}
 
+	@Override
+	public void post_update(BoardVO boardvo) {
+		sqlSession.update(nameSpace+".post_update", boardvo);
+	}
+
+	@Override
+	public void post_delete(Long post_no) {
+		sqlSession.delete(nameSpace+".post_delete", post_no);
+	}
+
+	@Override
+	public void postregistering2(BoardVO boardvo) {
+		sqlSession.insert(nameSpace+".postregistering2", boardvo);
+		
+	}
+
+	@Override
+	public MemberDto profile(String id) {
+		return sqlSession.selectOne(nameSpace+".profile", id);
+	}
+
 }

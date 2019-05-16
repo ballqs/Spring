@@ -89,7 +89,8 @@ public class MywepController {
 			@RequestParam("password") String password,
 			BoardVO boardvo,
 			Model model,
-			Criteria criteria) {
+			Criteria criteria,
+			HttpSession Session) {
 		//password가 아무 값도 참조하지 못했을 경우 회원이라는 증거.
 		//테이블의 ID값과 회원의 ID값이 같지 않을 경우? noUser 즉 비회원이다.
 		//그렇다면 이것의 구분을 어떻게?...
@@ -101,7 +102,7 @@ public class MywepController {
 		boardvo.setPOST_CONTENT(post_content);
 		boardvo.setID(id);
 		
-		mywepService.postregistering(boardvo,password);
+		mywepService.postregistering(boardvo,password,Session);
 		
 		integrated(criteria,model);
 		
@@ -139,19 +140,28 @@ public class MywepController {
 	}
 	
 	//회원이 게시물 수정을 눌렀을때의 Mapping
-	@RequestMapping(value = "/boardmodify", method = RequestMethod.GET)
+	@RequestMapping(value = "/boardmodify", method = RequestMethod.POST)
 	public String boardmodify(@RequestParam("POST_NO") Long post_no,
 			@ModelAttribute("cri") Criteria cri,
-			Model model,BoardVO boardvo) {
-		boardvo = mywepService.post_modify(post_no);
+			Model model,BoardVO boardvo,HttpSession Session) {
 		
-		model.addAttribute("board", boardvo);
+		Object name = Session.getAttribute("id");
 		
-		return "/board/modify";
+		if(name == null) {
+			return "redirect:/";
+		}else {
+			boardvo = mywepService.post_modify(post_no);
+			model.addAttribute("board", boardvo);						
+			return "/board/modify";
+		}
+	}
+	@RequestMapping(value = {"/boardmodify" , "/boardmodify2"}, method = RequestMethod.GET)
+	public String error() {
+		return "";
 	}
 	
 	//비회원일때 처리 방식 비밀번호를 받아서 맞는지 확인 해야한다.
-	@RequestMapping(value = "/boardmodify2", method = RequestMethod.GET)
+	@RequestMapping(value = "/boardmodify2", method = RequestMethod.POST)
 	public String boardmodify2(@RequestParam("POST_NO") Long post_no,
 			@ModelAttribute("cri") Criteria cri,
 			Model model,BoardVO boardvo,
@@ -164,13 +174,34 @@ public class MywepController {
 	}
 	
 	@RequestMapping(value = "/post_update", method = RequestMethod.POST)
-	public String postupdate() {
+	public String postupdate(@RequestParam("POST_NO") Long post_no,
+			@RequestParam("POST_TITLE") String post_title,
+			@RequestParam("POST_CONTENT") String post_content,
+			@RequestParam("ID") String id,
+			BoardVO boardvo,Model model,
+			@ModelAttribute("cri") Criteria cri) {
+		boardvo.setPOST_NO(post_no);
+		boardvo.setPOST_TITLE(post_title);
+		boardvo.setPOST_CONTENT(post_content);
+		boardvo.setID(id);
+		String result = mywepService.post_update(boardvo,model);
 		
-		return "/board/get";
+		return result;
 	}
 	
-	@RequestMapping(value = "/remove", method = RequestMethod.POST)
-	public String remove() {
-		return "/";
+	@RequestMapping(value = "/post_remove", method = RequestMethod.POST)
+	public String remove(@ModelAttribute("cri") Criteria cri,
+			@RequestParam("POST_NO") Long post_no) {
+		mywepService.post_delete(post_no);
+		return "redirect:/";
 	}
+	
+	@RequestMapping(value = "/profile", method = RequestMethod.GET)
+	public String profile(HttpSession session,Model model) {
+		String id = (String) session.getAttribute("id");
+		MemberDto member = mywepService.profile(id);
+		model.addAttribute("member", member);
+		return "/board/profile";
+	}
+	
 }

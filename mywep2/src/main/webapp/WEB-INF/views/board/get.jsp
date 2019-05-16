@@ -77,7 +77,7 @@
   <input type='hidden' name='amount' value='<c:out value="${cri.amount}"/>'>
   <input type='hidden' name='keyword' value='<c:out value="${cri.keyword}"/>'>
   <input type='hidden' name='type' value='<c:out value="${cri.type}"/>'>  
- <input id='npID' type='hidden' name='NONE_PW' />
+  <input id='npID' type='hidden' name='NONE_PW' />
 </form>
 
 
@@ -134,7 +134,7 @@ $(document).ready(function() {
   
   $("button[data-oper='modify']").on("click", function(e){
 	    
-	    operForm.attr("action","/boardmodify").submit();
+	    operForm.attr("action","/boardmodify").attr("method","post").submit();
 	    
 	  });
   
@@ -144,7 +144,7 @@ $(document).ready(function() {
   $('#MODIFY').on("click", function(e){
 	var np = document.getElementsByName("np")[0].value;
 	$("#npID").val(np);
-    operForm.attr("action","/boardmodify2").submit();	  
+    operForm.attr("action","/boardmodify2").attr("method","post").submit();	  
   });
   
     

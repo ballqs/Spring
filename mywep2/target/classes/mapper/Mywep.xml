@@ -108,4 +108,22 @@
 		SELECT NONE_PW FROM NOUSER_TB WHERE POST_NO = #{post_no}
 	</select>
 	
+	<update id="post_update" parameterType="boardvo">
+		UPDATE TBL_BOARD 
+		SET POST_TITLE = #{POST_TITLE}, POST_CONTENT = #{POST_CONTENT}, ID = #{ID}, UPDATEDATE = SYSDATE
+		WHERE POST_NO = #{POST_NO}
+	</update>
+	
+	<delete id="post_delete" parameterType="Long">
+		DELETE FROM TBL_BOARD WHERE POST_NO = #{POST_NO}
+	</delete>
+	
+	<insert id="postregistering2" parameterType="boardvo">
+		INSERT INTO TBL_BOARD(POST_NO,POST_TITLE,POST_CONTENT,ID,REGDATE,USERCHECK)
+		VALUES(SEQ_BOARD.NEXTVAL,#{POST_TITLE},#{POST_CONTENT},#{ID},SYSDATE,'Y')
+	</insert>
+	
+	<select id="profile" parameterType="String" resultType="member">
+		SELECT * FROM MEMBER_TB WHERE ID = #{id}
+	</select>
 </mapper>

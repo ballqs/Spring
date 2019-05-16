@@ -30,43 +30,53 @@
       
  
 <div class="form-group">
-  <label>post_no</label> 
+  <label>게시물 번호</label> 
   <input class="form-control" name='POST_NO' 
      value='<c:out value="${board.POST_NO }"/>' readonly="readonly">
 </div>
 
 <div class="form-group">
-  <label>Title</label> 
+  <label>제목</label> 
   <input class="form-control" name='POST_TITLE' 
     value='<c:out value="${board.POST_TITLE }"/>' >
 </div>
 
 <div class="form-group">
-  <label>Text area</label>
+  <label>내용</label>
   <textarea class="form-control" rows="3" name='POST_CONTENT' ><c:out value="${board.POST_CONTENT}"/></textarea>
 </div>
+<c:choose>
+	<c:when test="">
+		<div class="form-group">
+		  <label>작성자</label> 
+		  <input class="form-control" name='ID'
+		    value='<c:out value="${board.ID}"/>' readonly="readonly">            
+		</div>
+	</c:when>
+	<c:otherwise>	
+		<div class="form-group">
+		  <label>작성자</label> 
+		  <input class="form-control" name='ID'
+		    value='<c:out value="${board.ID}"/>' readonly="readonly">            
+		</div>
+	</c:otherwise>
+</c:choose>
 
 <div class="form-group">
-  <label>Writer</label> 
-  <input class="form-control" name='ID'
-    value='<c:out value="${board.ID}"/>' readonly="readonly">            
-</div>
-
-<div class="form-group">
-  <label>RegDate</label> 
+  <label>작성일</label> 
   <input class="form-control" name='REGDATE'
     value='<fmt:formatDate pattern = "yyyy/MM/dd" value = "${board.REGDATE}" />'  readonly="readonly">            
 </div>
 
 <div class="form-group">
-  <label>Update Date</label> 
+  <label>수정일</label> 
   <input class="form-control" name='UPDATEDATE'
     value='<fmt:formatDate pattern = "yyyy/MM/dd" value = "${board.UPDATEDATE}" />'  readonly="readonly">            
 </div>
 
           
 
-  <button type="submit" class="btn btn-default">수정 완료</button>
+  <button type="submit" data-oper='modify' class="btn btn-default">수정 완료</button>
   <button type="submit" data-oper='remove' class="btn btn-danger">삭제</button>
   <button type="submit" data-oper='list' class="btn btn-info">목록</button>
 </form>
@@ -97,11 +107,11 @@ $(document).ready(function() {
 	    console.log(operation);
 	    
 	    if(operation === 'remove'){
-	      formObj.attr("action", "/board/remove");
+	      formObj.attr("action", "/post_remove");
 	      
 	    }else if(operation === 'list'){
 	      //move to list
-	      formObj.attr("action", "/board/list").attr("method","get");
+	      formObj.attr("action", "/").attr("method","get");
 	      
 	      var pageNumTag = $("input[name='pageNum']").clone();
 	      var amountTag = $("input[name='amount']").clone();

@@ -29,4 +29,12 @@ public interface MywepDao {
 
 	String nouserSelectOne(Long post_no);
 
+	void post_update(BoardVO boardvo);
+
+	void post_delete(Long post_no);
+
+	void postregistering2(BoardVO boardvo);
+
+	MemberDto profile(String id);
+
 }

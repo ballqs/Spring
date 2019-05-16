@@ -55,10 +55,20 @@ public class MywepServiceImpl implements MywepService{
 	
 	@Transactional
 	@Override
-	public void postregistering(BoardVO boardvo, String password) {
+	public void postregistering(BoardVO boardvo, String password,  HttpSession session) {
 		//게시물 정보 + 아이디 + 비번
 		
-		mywepDao.postregistering(boardvo);
+		Object id = session.getAttribute("id");
+		
+		if(id == null) {
+			//noUser방식!
+			mywepDao.postregistering(boardvo);//UserCheck를 여기서 구분할 것			
+		}else {
+			//유저 방식
+			mywepDao.postregistering2(boardvo);			
+		}
+		
+		
 		//게시물 입력하는 것 => 가지고 있는 값 : 제목,내용,아이디
 		
 		
@@ -85,7 +95,8 @@ public class MywepServiceImpl implements MywepService{
 	public BoardVO post_modify(Long post_no) {
 		return mywepDao.post_modify(post_no);
 	}
-
+	
+	@Transactional
 	@Override
 	public String post_noneuser_modify(Long post_no, Model model, BoardVO boardvo, String nONE_PW) {
 		String pw = mywepDao.nouserSelectOne(post_no);
@@ -96,6 +107,25 @@ public class MywepServiceImpl implements MywepService{
 		}else {
 			return "/board/get";
 		}
+	}
+	
+	@Transactional
+	@Override
+	public String post_update(BoardVO boardvo, Model model) {
+		mywepDao.post_update(boardvo);
+		boardvo = mywepDao.post_modify(boardvo.getPOST_NO());
+		model.addAttribute("board", boardvo);
+		return "/board/get";
+	}
+
+	@Override
+	public void post_delete(Long post_no) {
+		mywepDao.post_delete(post_no);
+	}
+
+	@Override
+	public MemberDto profile(String id) {
+		return mywepDao.profile(id);
 	}
 
 
