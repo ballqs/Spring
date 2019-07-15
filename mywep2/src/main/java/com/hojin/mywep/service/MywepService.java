@@ -19,7 +19,7 @@ public interface MywepService {
 	int getTotal(Criteria criteria);
 
 	void postregistering(BoardVO boardvo, String password, HttpSession session);
-
+	
 	BoardVO post_view(Long post_no);
 
 	BoardVO post_modify(Long post_no);

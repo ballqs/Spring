@@ -49,13 +49,16 @@
 		border: 1px solid #FF7F50;
 	}
 </style>
+
+
+
 </head>
 <body>
 <!------ Include the above in your HEAD tag ---------->
 <div class="fullsize">
       <legend>회원 가입 창</legend>
     <form accept-charset="UTF-8" action="singupComplete" method="post">
-        <input class="span3" name="id" placeholder="Username" type="text">
+        <input class="span3" name="id" placeholder="id" type="text">
         <input class="span3" name="pw" placeholder="Password" type="password"> 
         <input class="span3" name="name" placeholder="Name" type="text">
         <input class="span3" name="email" placeholder="Email" type="email">

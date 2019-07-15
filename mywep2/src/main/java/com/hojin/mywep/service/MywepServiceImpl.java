@@ -32,6 +32,7 @@ public class MywepServiceImpl implements MywepService{
 		}else {
 			if(successCheck.getPW().equals(pw)) {//회원의 아이디랑 비밀번호가 같을때 ID 속성 저장
 				session.setAttribute("id", id);
+				session.setAttribute("name", successCheck.getNAME());
 				if(successCheck.getADMIN() == 'Y') {					
 					session.setAttribute("admin", successCheck.getADMIN());
 				}

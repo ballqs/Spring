@@ -78,7 +78,8 @@
 								<option value="TWC"
 									<c:out value="${pageMaker.cri.type eq 'TWC'?'selected':''}"/>>제목
 									or 내용 or 작성자</option>
-							</select> <input type='text' name='keyword'
+							</select>
+							<input type='text' name='keyword'
 								value='<c:out value="${pageMaker.cri.keyword}"/>' /> <input
 								type='hidden' name='pageNum'
 								value='<c:out value="${pageMaker.cri.pageNum}"/>' /> <input
